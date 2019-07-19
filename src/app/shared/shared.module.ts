@@ -1,6 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChartsModule } from './charts/charts.module';
 
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DefaultLayoutComponent } from './layouts/default-layout/default-layout.component';
@@ -19,12 +20,15 @@ const SHARED_PROVIDERS = [];
   declarations: [...COMPONENTS],
   imports: [
     ...BASE_MODULES,
-    ...LIB_MODULES
+    ...LIB_MODULES,
+
+    ChartsModule.forRoot()
   ],
   exports: [
     ...BASE_MODULES,
     ...LIB_MODULES,
-    ...COMPONENTS
+    ...COMPONENTS,
+    ChartsModule
   ]
 })
 export class SharedModule {
