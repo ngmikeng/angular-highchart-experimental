@@ -1,1 +1,10 @@
-<p>multi-lines-chart works!</p>
+<div>
+  <highcharts-chart
+    [Highcharts]="Highcharts"
+    [options]="chartOptions"
+    [(update)]="updateFlagChart"
+    (chartInstance)="chartInstanceHandler($event)"
+    style="width: 100%; height: 460px; display: block;"
+  >
+  </highcharts-chart>
+</div>

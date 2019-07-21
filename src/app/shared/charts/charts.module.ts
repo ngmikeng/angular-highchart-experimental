@@ -1,5 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { HighchartsChartModule } from 'highcharts-angular';
+import { DefaultChartService } from './services/default-chart.service';
 import { MultiLinesChartService } from './services/multi-lines-chart.service';
 import { MultiLinesChartComponent } from './components/multi-lines-chart/multi-lines-chart.component';
 
@@ -8,10 +9,11 @@ import { MultiLinesChartComponent } from './components/multi-lines-chart/multi-l
     MultiLinesChartComponent
   ],
   imports: [
-    CommonModule
+    HighchartsChartModule
   ],
   exports: [
-    MultiLinesChartComponent
+    MultiLinesChartComponent,
+    HighchartsChartModule
   ]
 })
 export class ChartsModule {
@@ -19,6 +21,7 @@ export class ChartsModule {
     return <ModuleWithProviders> {
       ngModule: ChartsModule,
       providers: [
+        DefaultChartService,
         MultiLinesChartService
       ],
     };
