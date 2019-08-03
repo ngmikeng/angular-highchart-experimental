@@ -7,6 +7,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DefaultLayoutComponent } from './layouts/default-layout/default-layout.component';
 import { HeaderComponent, SidebarComponent } from './components';
 
+import { ApiChartDataService } from './services/api-chart-data.service';
+
 const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule];
 const LIB_MODULES = [NgbModule];
 const COMPONENTS = [
@@ -14,7 +16,9 @@ const COMPONENTS = [
   HeaderComponent,
   SidebarComponent,
 ];
-const SHARED_PROVIDERS = [];
+const SHARED_PROVIDERS = [
+  ApiChartDataService
+];
 
 @NgModule({
   declarations: [...COMPONENTS],

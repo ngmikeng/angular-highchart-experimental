@@ -2,28 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import noData from 'highcharts/modules/no-data-to-display';
 noData(Highcharts);
-import { MultiLinesChartService } from '../../services/multi-lines-chart.service';
 import { of } from 'rxjs';
-import { delay } from 'rxjs/operators';
-
-const MOCK_DATA: any = [{
-  "id": "data sample",
-  "name": "Data sample",
-  "type": "line",
-  "data": [
-    { "x": 0, "y": 0},
-    { "x": 0.016666666666666666, "y": 0},
-    { "x": 0.03333333333333333, "y": 0},
-    { "x": 0.05, "y": 0},
-    { "x": 0.06666666666666667, "y": 0},
-    { "x": 0.08333333333333333, "y": 0},
-    { "x": 0.1, "y": 0},
-    { "x": 0.11666666666666667, "y": 0},
-    { "x": 0.13333333333333333, "y": 0},
-    { "x": 0.15, "y": 0},
-    { "x": 0.16666666666666666, "y": 0},
-    { "x": 0.18333333333333332, "y": 0}, { "x": 0.2, "y": 0}, { "x": 0.21666666666666667, "y": 0}, { "x": 0.23333333333333334, "y": 0}, { "x": 0.25, "y": 0}, { "x": 0.26666666666666666, "y": 0}, { "x": 0.2833333333333333, "y": 0}, { "x": 0.3, "y": 0}, { "x": 0.31666666666666665, "y": 0}, { "x": 0.3333333333333333, "y": 0}, { "x": 0.35, "y": 0}, { "x": 0.36666666666666664, "y": 0}, { "x": 0.38333333333333336, "y": 0}, { "x": 0.4, "y": 0}, { "x": 0.4166666666666667, "y": 0}, { "x": 0.43333333333333335, "y": 0}, { "x": 0.45, "y": 0}, { "x": 0.4666666666666667, "y": 0}, { "x": 0.48333333333333334, "y": 0}, { "x": 0.5, "y": 0}, { "x": 0.5166666666666667, "y": 0}, { "x": 0.5333333333333333, "y": 0}, { "x": 0.55, "y": 0}, { "x": 0.5666666666666667, "y": 0}, { "x": 0.5833333333333334, "y": 0}, { "x": 0.6, "y": 0}, { "x": 0.6166666666666667, "y": 0}, { "x": 0.6333333333333333, "y": 0}]
-}];
+import { delay, map } from 'rxjs/operators';
+import { MultiLinesChartService } from '../../services/multi-lines-chart.service';
+import { ApiChartDataService } from '../../../services/api-chart-data.service';
 
 @Component({
   selector: 'app-multi-lines-chart',
@@ -38,8 +20,38 @@ export class MultiLinesChartComponent implements OnInit {
   updateFlagChart: boolean = false;
   isLoadingChart = false;
 
+  yAxisData = [
+    {
+      name: 'Axis Y 1',
+      min: null,
+      max: null,
+      groupItems: [
+        { name: 'Data m2', mappingName: 'm2' }
+      ]
+    },
+    {
+      name: 'Axis Y 2',
+      min: null,
+      max: null,
+      groupItems: [
+        { name: 'Data m3', mappingName: 'm3' }
+      ]
+    },
+    {
+      name: 'Axis Y 3',
+      min: null,
+      max: null,
+      opposite: true,
+      groupItems: [
+        { name: 'Data m4', mappingName: 'm4' },
+        { name: 'Data m5', mappingName: 'm5' },
+      ]
+    }
+  ];
+
   constructor(
-    private multiLinesChartService: MultiLinesChartService
+    private multiLinesChartService: MultiLinesChartService,
+    private apiChartDataService: ApiChartDataService
   ) {
     Highcharts.setOptions({
       lang: {
@@ -60,36 +72,24 @@ export class MultiLinesChartComponent implements OnInit {
     this.chartInstance = chart;
 
     const xAxisOptions = this.multiLinesChartService.getXAxisOption([
-      { min: 0, max: 15 }
+      { min: null, max: null }
     ]);
     xAxisOptions.forEach(yAxis => {
       this.chartInstance.addAxis(yAxis, true);
     });
 
-    const yAxisOptions = this.multiLinesChartService.getYAxisOption([
-      {
-        name: 'Axis Y 1',
-        min: null,
-        max: null
-      },
-      {
-        name: 'Axis Y 2',
-        min: null,
-        max: null
-      },
-      {
-        name: 'Axis Y 3',
-        min: null,
-        max: null,
-        opposite: true,
-      }
-    ]);
+    const yAxisOptions = this.multiLinesChartService.getYAxisOption(this.yAxisData);
     yAxisOptions.forEach(yAxis => {
       this.chartInstance.addAxis(yAxis, false);
     });
 
-    this.loadChartData().subscribe(() => {
-
+    this.apiChartDataService.getMultiLineChartData().subscribe(chartOriginData => {
+      let seriesData = [];
+      this.yAxisData.forEach((axisItem, axisIndex) => {
+        const data = this.multiLinesChartService.parseSeriesData(axisItem.groupItems, axisIndex, chartOriginData);
+        seriesData = seriesData.concat(data);
+      });
+      this.loadChartData(seriesData);
     });
   }
 
@@ -125,18 +125,13 @@ export class MultiLinesChartComponent implements OnInit {
     }
   }
 
-  loadChartData() {
-    const observer = of(null);
-    if (this.chartInstance) {
-      let seriesData = MOCK_DATA;
+  loadChartData(seriesData) {
+    if (this.chartInstance && seriesData) {
       seriesData.forEach(series => {
         this.chartInstance.addSeries(series, false, false);
       });
       this.chartInstance.redraw();
     }
-    return observer.pipe(
-      delay(200)
-    );
   }
 
 }

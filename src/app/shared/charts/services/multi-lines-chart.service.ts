@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { DefaultChartService } from './default-chart.service';
 import * as Highcharts from 'highcharts';
 
+const DATETIME_MAPPING_NAME = 'dt';
+
 @Injectable()
 export class MultiLinesChartService {
 
@@ -109,6 +111,57 @@ export class MultiLinesChartService {
 
         result.push(axisOption);
       }
+    }
+    return result;
+  }
+
+  parseSeriesData(axisGroupItems, yAxisIndex: number, originData?) {
+    let result = [];
+    if (axisGroupItems && originData) {
+      let dataRowArray = originData.data;
+      const mappingArray = originData.map;
+      let xAxisChannelName = DATETIME_MAPPING_NAME;
+
+      // find index of time mapping
+      const datetimeIndex = mappingArray.findIndex(value => value === xAxisChannelName);
+
+      result = axisGroupItems.map((seriesItem, index) => {
+        let dataSeries = [];
+        const dataIndex = typeof yAxisIndex === 'number' && !isNaN(yAxisIndex) ? yAxisIndex : index;
+        // find index of mapping name
+        const mappingIndex = mappingArray.findIndex(value => value === seriesItem.mappingName);
+
+        // parse to chart data point
+        const seriesId = `${seriesItem.name}_${dataIndex}`;
+        dataRowArray.forEach(dataRow => {
+          let xValue = dataRow[datetimeIndex];
+          if (xAxisChannelName === DATETIME_MAPPING_NAME) {
+            xValue = new Date(xValue).getTime();
+          }
+
+          const yValue = dataRow[mappingIndex] * 1;
+          const point = { x: xValue, y: yValue, groupId: seriesId };
+          dataSeries.push(point);
+        });
+
+        // pre-sort data series by x value
+        if (dataSeries.length > 1) {
+          dataSeries = dataSeries.sort((a, b) => {
+            return a.x - b.x;
+          });
+        }
+
+        const seriesName = `${seriesItem.name} ${index}`;
+
+        return {
+          id: seriesId,
+          name: seriesName,
+          type: 'line',
+          data: dataSeries,
+          yAxis: dataIndex,
+          boostThreshold: 10000
+        };
+      });
     }
     return result;
   }
