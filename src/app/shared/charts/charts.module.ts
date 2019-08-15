@@ -3,10 +3,12 @@ import { HighchartsChartModule } from 'highcharts-angular';
 import { DefaultChartService } from './services/default-chart.service';
 import { MultiLinesChartService } from './services/multi-lines-chart.service';
 import { MultiLinesChartComponent } from './components/multi-lines-chart/multi-lines-chart.component';
+import { MultiLinesNavigatorChartComponent } from './components/multi-lines-navigator-chart/multi-lines-navigator-chart.component';
 
 @NgModule({
   declarations: [
-    MultiLinesChartComponent
+    MultiLinesChartComponent,
+    MultiLinesNavigatorChartComponent
   ],
   imports: [
     HighchartsChartModule
