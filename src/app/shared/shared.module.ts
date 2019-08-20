@@ -6,6 +6,7 @@ import { ChartsModule } from './charts/charts.module';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { DefaultLayoutComponent } from './layouts/default-layout/default-layout.component';
 import { HeaderComponent, SidebarComponent } from './components';
+import { MultiLinesChartSettingsComponent } from './components/modals';
 
 import { ApiChartDataService } from './services/api-chart-data.service';
 
@@ -15,13 +16,17 @@ const COMPONENTS = [
   DefaultLayoutComponent,
   HeaderComponent,
   SidebarComponent,
+  MultiLinesChartSettingsComponent
 ];
+const ENTRY_COMPONENTS = [
+  MultiLinesChartSettingsComponent
+]
 const SHARED_PROVIDERS = [
   ApiChartDataService
 ];
 
 @NgModule({
-  declarations: [...COMPONENTS],
+  declarations: [...COMPONENTS, ...ENTRY_COMPONENTS],
   imports: [
     ...BASE_MODULES,
     ...LIB_MODULES,
@@ -33,6 +38,9 @@ const SHARED_PROVIDERS = [
     ...LIB_MODULES,
     ...COMPONENTS,
     ChartsModule
+  ],
+  entryComponents: [
+    ...ENTRY_COMPONENTS
   ]
 })
 export class SharedModule {
