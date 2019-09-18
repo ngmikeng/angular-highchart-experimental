@@ -1,16 +1,17 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ChartsModule } from './charts/charts.module';
-
+import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+
+import { ChartsModule } from './charts/charts.module';
 import { DefaultLayoutComponent } from './layouts/default-layout/default-layout.component';
 import { HeaderComponent, SidebarComponent } from './components';
 import { MultiLinesChartSettingsComponent } from './components/modals';
 
 import { ApiChartDataService } from './services/api-chart-data.service';
 
-const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule];
+const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule, RouterModule];
 const LIB_MODULES = [NgbModule];
 const COMPONENTS = [
   DefaultLayoutComponent,
