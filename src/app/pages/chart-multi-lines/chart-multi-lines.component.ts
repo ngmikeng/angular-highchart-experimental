@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 
 @Component({
 	selector: 'app-chart-multi-lines',
@@ -7,10 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ChartMultiLinesComponent implements OnInit {
 	listYAxis: any[] = [];
+	formYAxisConfig: FormGroup;
 
-	constructor() { }
+	constructor(
+		private formBuilder: FormBuilder,
+	) { }
 
 	ngOnInit() {
+	}
+
+	initForm() {
+		this.formYAxisConfig = this.formBuilder.group({
+			
+		})
 	}
 
 	addYAxis() {

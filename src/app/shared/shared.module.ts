@@ -10,6 +10,7 @@ import { HeaderComponent, SidebarComponent } from './components';
 import { MultiLinesChartSettingsComponent } from './components/modals';
 
 import { ApiChartDataService } from './services/api-chart-data.service';
+import { AxisConfigurationComponent } from './forms/axis-configuration/axis-configuration.component';
 
 const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule, RouterModule];
 const LIB_MODULES = [NgbModule];
@@ -17,7 +18,8 @@ const COMPONENTS = [
   DefaultLayoutComponent,
   HeaderComponent,
   SidebarComponent,
-  MultiLinesChartSettingsComponent
+  MultiLinesChartSettingsComponent,
+  AxisConfigurationComponent
 ];
 const ENTRY_COMPONENTS = [
   MultiLinesChartSettingsComponent

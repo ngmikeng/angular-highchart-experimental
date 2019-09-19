@@ -3,7 +3,7 @@
 	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 		<h1 class="h2">Multi lines</h1>
 	</div>
-	<div>
+	<form>
 		<h4>Y Axis configuration</h4>
 		<div>
 			<div class="mb-2">
@@ -11,7 +11,8 @@
 			</div>
 			<div *ngFor="let yAxis of listYAxis; let index = index;">
 				<hr>
-				<div class="form-row align-items-center">
+				<app-axis-configuration [yAxis]="yAxis"></app-axis-configuration>
+				<!-- <div class="form-row align-items-center">
 					<div class="col-auto">
 						<label class="sr-only" for="name">Name</label>
 						<input type="text" class="form-control mb-2" name="name" placeholder="Y Axis Name">
@@ -29,16 +30,16 @@
 					</div>
 				</div>
 				<div>
-					<div class="form-group" *ngFor="let dataSet of yAxis.dataSet">
-						<label for="exampleFormControlSelect1">Data set name</label>
-						<select class="form-control">
+					<div class="form-group" *ngFor="let dataSet of yAxis.dataSet; let index = index;">
+						<label for="selectDataSet">Data set name</label>
+						<select class="form-control" name="selectDataSet">
 							<option>m1</option>
 							<option>m2</option>
 							<option>m3</option>
 						</select>
 					</div>
-				</div>
+				</div> -->
 			</div>
 		</div>
-	</div>
+	</form>
 </section>
