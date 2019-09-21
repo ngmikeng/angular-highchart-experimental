@@ -14,11 +14,14 @@ router.get('/mock-time-series', function (req, res) {
   const mockTimeSeries = new MockTimeSeries();
   const numberOfMapping = 5;
   let mockSerriesData = [];
+  const dataMapping = ['dt'];
   for (let index = 0; index < numberOfMapping; index++) {
     const mockData = mockTimeSeries.sampleData({ methodType: 'gaussian' });
     mockSerriesData.push(mockData);
+    // add mapping
+    dataMapping.push(`m${index}`);
   }
-  const result = mockSerriesData[0].map((data, objIndex) => {
+  const dataSeries = mockSerriesData[0].map((data, objIndex) => {
     const arrItem = [data.timestamp, data.value];
     for (let index = 1; index < mockSerriesData.length; index++) {
       arrItem.push(mockSerriesData[index][objIndex].value);
@@ -26,7 +29,8 @@ router.get('/mock-time-series', function (req, res) {
     return arrItem;
   });
   res.json({
-    data: result
+    data: dataSeries,
+    map: dataMapping
   });
 });
 

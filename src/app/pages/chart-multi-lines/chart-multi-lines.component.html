@@ -11,34 +11,7 @@
 			</div>
 			<div *ngFor="let yAxis of listYAxis; let index = index;">
 				<hr>
-				<app-axis-configuration [yAxis]="yAxis"></app-axis-configuration>
-				<!-- <div class="form-row align-items-center">
-					<div class="col-auto">
-						<label class="sr-only" for="name">Name</label>
-						<input type="text" class="form-control mb-2" name="name" placeholder="Y Axis Name">
-					</div>
-					<div class="col-auto">
-						<div class="form-check mb-2">
-							<input class="form-check-input" type="checkbox" name="oppositeCheck">
-							<label class="form-check-label" for="oppositeCheck">
-								Opposite
-							</label>
-						</div>
-					</div>
-					<div class="col-auto">
-						<button type="submit" class="btn btn-success mb-2" (click)="addAxisDataSet(yAxis)">Add data set</button>
-					</div>
-				</div>
-				<div>
-					<div class="form-group" *ngFor="let dataSet of yAxis.dataSet; let index = index;">
-						<label for="selectDataSet">Data set name</label>
-						<select class="form-control" name="selectDataSet">
-							<option>m1</option>
-							<option>m2</option>
-							<option>m3</option>
-						</select>
-					</div>
-				</div> -->
+				<app-axis-configuration [yAxis]="yAxis" (onDeleteEvent)="onDeleteAxis($event, index)"></app-axis-configuration>
 			</div>
 		</div>
 	</form>

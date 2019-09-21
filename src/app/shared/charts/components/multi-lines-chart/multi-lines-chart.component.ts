@@ -44,7 +44,7 @@ export class MultiLinesChartComponent implements OnInit {
       opposite: true,
       groupItems: [
         { name: 'Data m4', mappingName: 'm4' },
-        { name: 'Data m5', mappingName: 'm5' },
+        { name: 'Data m1', mappingName: 'm1' },
       ]
     }
   ];

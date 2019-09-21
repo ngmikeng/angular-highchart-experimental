@@ -9,7 +9,8 @@ export class ApiChartDataService {
   ) { }
 
   getMultiLineChartData() {
-    const path = `/mock/multi-line-chart-data`;
+    // const path = `/mock/multi-line-chart-data`;
+    const path = `/mock/mock-time-series`;
     return this.apiService.get(path);
   }
 }

@@ -19,7 +19,7 @@ export class ChartMultiLinesComponent implements OnInit {
 
 	initForm() {
 		this.formYAxisConfig = this.formBuilder.group({
-			
+
 		})
 	}
 
@@ -33,6 +33,12 @@ export class ChartMultiLinesComponent implements OnInit {
 		if (option) {
 			option.dataSet.push(1);
 		}
-	}
+  }
+
+  onDeleteAxis(dataEvent, index) {
+    if (this.listYAxis.length > 0) {
+      this.listYAxis.splice(index, 1);
+    }
+  }
 
 }

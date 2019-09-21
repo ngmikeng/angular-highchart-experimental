@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 
 @Component({
@@ -9,6 +9,7 @@ import { FormGroup } from '@angular/forms';
 export class AxisConfigurationComponent implements OnInit {
   @Input() form: FormGroup;
   @Input() yAxis;
+  @Output() onDeleteEvent = new EventEmitter<any>();
 
   listMapping: any[] = [
     { name: 'm1' },
@@ -26,6 +27,10 @@ export class AxisConfigurationComponent implements OnInit {
 		if (this.yAxis) {
 			this.yAxis.dataSet.push(1);
 		}
-	}
+  }
+
+  delete() {
+    this.onDeleteEvent.emit();
+  }
 
 }
