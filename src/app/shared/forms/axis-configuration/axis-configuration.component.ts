@@ -7,8 +7,8 @@ import { FormGroup } from '@angular/forms';
   styleUrls: ['./axis-configuration.component.scss']
 })
 export class AxisConfigurationComponent implements OnInit {
-  @Input() form: FormGroup;
   @Input() yAxis;
+  @Input() form;
   @Output() onDeleteEvent = new EventEmitter<any>();
 
   listMapping: any[] = [
@@ -21,6 +21,7 @@ export class AxisConfigurationComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    console.log(this.form);
   }
 
   addAxisDataSet() {
@@ -29,8 +30,14 @@ export class AxisConfigurationComponent implements OnInit {
 		}
   }
 
-  delete() {
+  deleteAxis() {
     this.onDeleteEvent.emit();
+  }
+
+  deleteDataSet(dataSet, index) {
+    if (dataSet && dataSet.length > 0) {
+      dataSet.splice(index, 1);
+    }
   }
 
 }

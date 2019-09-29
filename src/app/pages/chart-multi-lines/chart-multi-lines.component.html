@@ -1,9 +1,8 @@
-<p>chart-multi-lines works!</p>
 <section>
 	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
 		<h1 class="h2">Multi lines</h1>
 	</div>
-	<form>
+	<form [formGroup]="formYAxisConfig">
 		<h4>Y Axis configuration</h4>
 		<div>
 			<div class="mb-2">
@@ -11,7 +10,7 @@
 			</div>
 			<div *ngFor="let yAxis of listYAxis; let index = index;">
 				<hr>
-				<app-axis-configuration [yAxis]="yAxis" (onDeleteEvent)="onDeleteAxis($event, index)"></app-axis-configuration>
+				<app-axis-configuration [form]="formYAxisConfig" [yAxis]="yAxis" (onDeleteEvent)="onDeleteAxis($event, index)"></app-axis-configuration>
 			</div>
 		</div>
 	</form>
