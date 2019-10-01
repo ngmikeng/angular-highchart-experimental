@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, FormArray, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-axis-configuration',
@@ -8,8 +8,10 @@ import { FormGroup } from '@angular/forms';
 })
 export class AxisConfigurationComponent implements OnInit {
   @Input() yAxis;
-  @Input() form;
+  @Input() form: FormGroup;
   @Output() onDeleteEvent = new EventEmitter<any>();
+
+  axisForm: FormGroup;
 
   listMapping: any[] = [
     { name: 'm1' },
@@ -20,13 +22,30 @@ export class AxisConfigurationComponent implements OnInit {
 
   constructor() { }
 
+  get axisConfigurations() {
+    return this.form.get('axisConfigurations') as FormArray;
+  }
+
+  get dataSet() {
+    return this.axisForm.get('dataSet') as FormArray;
+  }
+
   ngOnInit() {
-    console.log(this.form);
+    this.axisForm = new FormGroup({
+      name: new FormControl(''),
+      opposite: new FormControl(false),
+      dataSet: new FormArray([])
+    });
+
+    this.axisConfigurations.push(this.axisForm);
   }
 
   addAxisDataSet() {
 		if (this.yAxis) {
-			this.yAxis.dataSet.push(1);
+      this.yAxis.dataSet.push(1);
+      this.dataSet.push(new FormGroup({
+        dataSetName: new FormControl('m1')
+      }));
 		}
   }
 
@@ -37,6 +56,7 @@ export class AxisConfigurationComponent implements OnInit {
   deleteDataSet(dataSet, index) {
     if (dataSet && dataSet.length > 0) {
       dataSet.splice(index, 1);
+      this.dataSet.removeAt(index);
     }
   }
 

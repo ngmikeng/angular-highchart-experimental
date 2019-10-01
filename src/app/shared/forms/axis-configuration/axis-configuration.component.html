@@ -1,35 +1,39 @@
-<div [formGroup]="form" class="form-row align-items-center">
-  <div class="col-auto">
-    <label class="sr-only" for="name">Name</label>
-    <input type="text" class="form-control mb-2" name="name" placeholder="Y Axis Name" formControlName="name">
-  </div>
-  <div class="col-auto">
-    <div class="form-check mb-2">
-      <input class="form-check-input" type="checkbox" name="oppositeCheck" formControlName="opposite">
-      <label class="form-check-label" for="oppositeCheck">
-        Opposite
-      </label>
+<div [formGroup]="axisForm">
+  <div class="form-row align-items-center">
+    <div class="col-auto">
+      <label class="sr-only" for="name">Name</label>
+      <input type="text" class="form-control mb-2" name="name" placeholder="Y Axis Name" formControlName="name">
+    </div>
+    <div class="col-auto">
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" name="oppositeCheck" formControlName="opposite">
+        <label class="form-check-label" for="oppositeCheck">
+          Opposite
+        </label>
+      </div>
+    </div>
+    <div class="col-auto">
+      <button type="submit" class="btn btn-success mb-2" (click)="addAxisDataSet()">Add data set</button>
+    </div>
+    <div class="col-auto">
+      <button type="button" class="btn btn-danger mb-2" (click)="deleteAxis()">Delete</button>
     </div>
   </div>
-  <div class="col-auto">
-    <button type="submit" class="btn btn-success mb-2" (click)="addAxisDataSet()">Add data set</button>
-  </div>
-  <div class="col-auto">
-    <button type="button" class="btn btn-danger mb-2" (click)="deleteAxis()">Delete</button>
-  </div>
-</div>
-<div>
-  <div class="form-group" *ngFor="let dataSet of yAxis.dataSet; let index = index;">
-    <label for="selectDataSet">Data set name</label>
-    <div class="form-row">
-      <div class="col-4">
-        <select class="form-control" name="selectDataSet">
-          <option *ngFor="let mapping of listMapping" [attr.value]="mapping.name">{{ mapping.name }}</option>
-        </select>
-      </div>
-      <div class="col-3">
-        <button type="button" class="btn btn-danger mb-2" (click)="deleteDataSet(yAxis.dataSet, index)">Delete</button>
-      </div>
+  <div formArrayName="dataSet">
+    <div class="form-group" *ngFor="let dataSet of yAxis.dataSet; let index = index;">
+      <ng-container [formGroupName]="index">
+        <label for="selectDataSet">Data set name</label>
+        <div class="form-row">
+          <div class="col-4">
+            <select class="form-control" name="selectDataSet" formControlName="dataSetName">
+              <option *ngFor="let mapping of listMapping" [attr.value]="mapping.name">{{ mapping.name }}</option>
+            </select>
+          </div>
+          <div class="col-3">
+            <button type="button" class="btn btn-danger mb-2" (click)="deleteDataSet(yAxis.dataSet, index)">Delete</button>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>

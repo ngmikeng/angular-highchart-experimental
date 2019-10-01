@@ -8,7 +8,11 @@ import { FormGroup, FormBuilder, Validators, AbstractControl, FormArray } from '
 })
 export class ChartMultiLinesComponent implements OnInit {
 	listYAxis: any[] = [];
-	formYAxisConfig: FormGroup;
+  formYAxisConfig: FormGroup;
+
+  get axisConfiguration() {
+    return this.formYAxisConfig.get('axisConfigurations') as FormArray;
+  }
 
 	constructor(
 		private formBuilder: FormBuilder,
@@ -39,7 +43,12 @@ export class ChartMultiLinesComponent implements OnInit {
   onDeleteAxis(dataEvent, index) {
     if (this.listYAxis.length > 0) {
       this.listYAxis.splice(index, 1);
+      this.axisConfiguration.removeAt(index);
     }
+  }
+
+  submitForm(event) {
+    console.log(this.formYAxisConfig.value);
   }
 
 }
