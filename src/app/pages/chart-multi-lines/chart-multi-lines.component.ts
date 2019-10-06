@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl, FormArray } from '@angular/forms';
+import { AxisConfiguration } from '../../models/axis-configuration.model';
+import { AxisConfigurationService } from '../../shared/services/axis-configuration.service';
 
 @Component({
 	selector: 'app-chart-multi-lines',
@@ -7,48 +9,48 @@ import { FormGroup, FormBuilder, Validators, AbstractControl, FormArray } from '
 	styleUrls: ['./chart-multi-lines.component.scss']
 })
 export class ChartMultiLinesComponent implements OnInit {
-	listYAxis: any[] = [];
-  formYAxisConfig: FormGroup;
+	listYAxisConfigs: any[] = [];
+	formYAxisConfig: FormGroup;
 
-  get axisConfiguration() {
-    return this.formYAxisConfig.get('axisConfigurations') as FormArray;
-  }
+	get axisConfigurations() {
+		return this.formYAxisConfig.get('axisConfigurations') as FormArray;
+	}
 
 	constructor(
 		private formBuilder: FormBuilder,
+		private axisConfigurationService: AxisConfigurationService
 	) { }
 
 	ngOnInit() {
-    this.initForm();
+		this.listYAxisConfigs = this.axisConfigurationService.getDefaultConfigs();
+		this.formYAxisConfig = this.initForm();
 	}
 
 	initForm() {
-		this.formYAxisConfig = new FormGroup({
-      axisConfigurations: new FormArray([])
-		});
+		if (this.listYAxisConfigs.length > 0) {
+			return new FormGroup({
+				axisConfigurations: this.axisConfigurationService.toFormArray(this.listYAxisConfigs)
+			});
+		} else {
+			return new FormGroup({
+				axisConfigurations: new FormArray([])
+			});
+		}
 	}
 
 	addYAxis() {
-		this.listYAxis.push({
-			dataSet: []
-		});
+		this.listYAxisConfigs.push(null);
 	}
 
-	addAxisDataSet(option) {
-		if (option) {
-			option.dataSet.push(1);
+	onDeleteAxis(dataEvent, index) {
+		if (this.listYAxisConfigs.length > 0) {
+			this.listYAxisConfigs.splice(index, 1);
+			this.axisConfigurations.removeAt(index);
 		}
-  }
+	}
 
-  onDeleteAxis(dataEvent, index) {
-    if (this.listYAxis.length > 0) {
-      this.listYAxis.splice(index, 1);
-      this.axisConfiguration.removeAt(index);
-    }
-  }
-
-  submitForm(event) {
-    console.log(this.formYAxisConfig.value);
-  }
+	submitForm(event) {
+		console.log(this.formYAxisConfig.value);
+	}
 
 }

@@ -10,6 +10,7 @@ import { HeaderComponent, SidebarComponent } from './components';
 import { MultiLinesChartSettingsComponent } from './components/modals';
 
 import { ApiChartDataService } from './services/api-chart-data.service';
+import { AxisConfigurationService } from './services/axis-configuration.service';
 import { AxisConfigurationComponent } from './forms/axis-configuration/axis-configuration.component';
 
 const BASE_MODULES = [CommonModule, FormsModule, ReactiveFormsModule, RouterModule];
@@ -25,7 +26,8 @@ const ENTRY_COMPONENTS = [
   MultiLinesChartSettingsComponent
 ]
 const SHARED_PROVIDERS = [
-  ApiChartDataService
+  ApiChartDataService,
+  AxisConfigurationService
 ];
 
 @NgModule({

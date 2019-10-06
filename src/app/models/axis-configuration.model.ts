@@ -14,8 +14,8 @@ export class AxisConfiguration {
   dataSets: IAxisDataSet[];
 
   constructor(options: IAxisConfiguration = {}) {
-    this.name = options.name;
-    this.opposite = options.opposite;
-    this.dataSets = options.dataSets;
+    this.name = options.name || 'No name';
+    this.opposite = !!options.opposite;
+    this.dataSets = options.dataSets || [];
   }
 }

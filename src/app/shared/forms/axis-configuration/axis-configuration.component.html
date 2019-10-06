@@ -13,24 +13,24 @@
       </div>
     </div>
     <div class="col-auto">
-      <button type="submit" class="btn btn-success mb-2" (click)="addAxisDataSet()">Add data set</button>
+      <button type="button" class="btn btn-success mb-2" (click)="addAxisDataSet()">Add data set</button>
     </div>
     <div class="col-auto">
       <button type="button" class="btn btn-danger mb-2" (click)="deleteAxis()">Delete</button>
     </div>
   </div>
-  <div formArrayName="dataSet">
-    <div class="form-group" *ngFor="let dataSet of yAxis.dataSet; let index = index;">
+  <div formArrayName="dataSets">
+    <div class="form-group" *ngFor="let dataSet of yAxis.dataSets; let index = index;">
       <ng-container [formGroupName]="index">
         <label for="selectDataSet">Data set name</label>
         <div class="form-row">
           <div class="col-4">
-            <select class="form-control" name="selectDataSet" formControlName="dataSetName">
-              <option *ngFor="let mapping of listMapping" [attr.value]="mapping.name">{{ mapping.name }}</option>
+            <select class="form-control" name="selectDataSet" formControlName="id">
+              <option *ngFor="let mapping of listMapping" [value]="mapping.id">{{ mapping.id }}</option>
             </select>
           </div>
           <div class="col-3">
-            <button type="button" class="btn btn-danger mb-2" (click)="deleteDataSet(yAxis.dataSet, index)">Delete</button>
+            <button type="button" class="btn btn-danger mb-2" (click)="deleteDataSet(yAxis.dataSets, index)">Delete</button>
           </div>
         </div>
       </ng-container>
