@@ -20,8 +20,12 @@ export class DashboardComponent implements OnInit {
   }
 
   openChartSettings() {
-    const modalRef = this.modalService.open(MultiLinesChartSettingsComponent);
+    const modalRef = this.modalService.open(MultiLinesChartSettingsComponent, { size: 'lg' });
     modalRef.componentInstance.message = 'Chart Settings';
+
+    modalRef.result
+      .then(result => console.log(result))
+      .catch(reason => console.log(reason));
   }
 
 }
