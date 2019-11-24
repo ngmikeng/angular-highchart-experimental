@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { DefaultChartService } from './default-chart.service';
 import * as Highcharts from 'highcharts';
+import { IChartDataResponse } from '../../services/api-chart-data.service';
+import { IAxisDataSet } from '../../../models/axis-configuration.model';
 
 const DATETIME_MAPPING_NAME = 'dt';
 
@@ -115,9 +117,9 @@ export class MultiLinesChartService {
     return result;
   }
 
-  parseSeriesData(axisGroupItems, yAxisIndex: number, originData?) {
+  parseSeriesData(axisDataSets: IAxisDataSet[], yAxisIndex: number, originData?: IChartDataResponse) {
     let result = [];
-    if (axisGroupItems && originData) {
+    if (axisDataSets && originData) {
       let dataRowArray = originData.data;
       const mappingArray = originData.map;
       let xAxisChannelName = DATETIME_MAPPING_NAME;
@@ -125,21 +127,21 @@ export class MultiLinesChartService {
       // find index of time mapping
       const datetimeIndex = mappingArray.findIndex(value => value === xAxisChannelName);
 
-      result = axisGroupItems.map((seriesItem, index) => {
+      result = axisDataSets.map((seriesItem, index) => {
         let dataSeries = [];
         const dataIndex = typeof yAxisIndex === 'number' && !isNaN(yAxisIndex) ? yAxisIndex : index;
         // find index of mapping name
-        const mappingIndex = mappingArray.findIndex(value => value === seriesItem.mappingName);
+        const mappingIndex = mappingArray.findIndex(value => value === seriesItem.id);
 
         // parse to chart data point
-        const seriesId = `${seriesItem.name}_${dataIndex}`;
+        const seriesId = `${seriesItem.id}_${dataIndex}`;
         dataRowArray.forEach(dataRow => {
           let xValue = dataRow[datetimeIndex];
           if (xAxisChannelName === DATETIME_MAPPING_NAME) {
             xValue = new Date(xValue).getTime();
           }
 
-          const yValue = dataRow[mappingIndex] * 1;
+          const yValue = dataRow[mappingIndex];
           const point = { x: xValue, y: yValue, groupId: seriesId };
           dataSeries.push(point);
         });
@@ -151,7 +153,7 @@ export class MultiLinesChartService {
           });
         }
 
-        const seriesName = `${seriesItem.name} ${index}`;
+        const seriesName = `${seriesItem.id} ${index}`;
 
         return {
           id: seriesId,

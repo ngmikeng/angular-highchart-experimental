@@ -11,8 +11,9 @@ import { AxisConfigurationService } from '../../../../shared/services/axis-confi
 })
 export class MultiLinesChartSettingsComponent implements OnInit {
   @Input() message;
+  @Input() yAxisConfigs: AxisConfiguration[];
 
-  listYAxisConfigs: any[] = [];
+  listYAxisConfigs: AxisConfiguration[];
 	formYAxisConfig: FormGroup;
 
 	get axisConfigurations() {
@@ -25,7 +26,7 @@ export class MultiLinesChartSettingsComponent implements OnInit {
 	) { }
 
 	ngOnInit() {
-		this.listYAxisConfigs = this.axisConfigurationService.getDefaultConfigs();
+		this.listYAxisConfigs = this.yAxisConfigs || [];
 		this.formYAxisConfig = this.initForm();
 	}
 

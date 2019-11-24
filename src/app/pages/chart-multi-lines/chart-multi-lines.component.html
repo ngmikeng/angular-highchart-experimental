@@ -1,20 +1,14 @@
 <section>
-	<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-		<h1 class="h2">Multi lines</h1>
-	</div>
-	<form [formGroup]="formYAxisConfig" (submit)="submitForm($event)">
-		<h4>Y Axis configuration</h4>
-		<div>
-			<div class="mb-2">
-				<button type="button" class="btn btn-primary" (click)="addYAxis()">Add Y Axis</button>
-			</div>
-			<div *ngFor="let yAxis of listYAxisConfigs; let index = index;">
-				<hr>
-				<app-axis-configuration [form]="formYAxisConfig" [yAxis]="yAxis" [axisIndex]="index" (onDeleteEvent)="onDeleteAxis($event, index)"></app-axis-configuration>
-			</div>
+  <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Multi lines chart</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group mr-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary" (click)="openChartSettings()">Settings</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary">Export</button>
+      </div>
     </div>
-    <div class="form-group">
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </div>
-	</form>
+  </div>
+  <div>
+    <app-multi-lines-chart [inputStates]="chartInputStates"></app-multi-lines-chart>
+  </div>
 </section>
