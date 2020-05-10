@@ -36,9 +36,8 @@ export class AxisConfigurationComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (this.formIndex && this.yAxis) {
-      this.axisForm = this.axisConfigurations.get(this.formIndex);
-    } else {
+    this.axisForm = this.axisConfigurations.get(this.formIndex);
+    if (!this.axisForm) {
       this.yAxis = {
         name: '',
         opposite: false,

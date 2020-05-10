@@ -43,7 +43,7 @@ export class MultiLinesChartSettingsComponent implements OnInit {
 	}
 
 	addYAxis() {
-		this.listYAxisConfigs.push(null);
+		this.listYAxisConfigs.push(new AxisConfiguration());
 	}
 
 	onDeleteAxis(dataEvent, index) {

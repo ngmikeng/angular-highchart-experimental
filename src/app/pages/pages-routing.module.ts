@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ChartMultiLinesComponent } from './chart-multi-lines/chart-multi-lines.component';
+import { ChartMultiLinesNavigatorComponent } from './chart-multi-lines-navigator/chart-multi-lines-navigator.component';
 
 const routes: Routes = [
   {
@@ -16,6 +17,10 @@ const routes: Routes = [
       {
         path: 'chart-multi-lines',
         component: ChartMultiLinesComponent
+      },
+      {
+        path: 'chart-multi-lines-navigator',
+        component: ChartMultiLinesNavigatorComponent
       },
       {
         path: '',

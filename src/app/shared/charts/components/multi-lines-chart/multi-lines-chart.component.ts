@@ -2,10 +2,8 @@ import { Component, OnInit, Input, SimpleChange } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import noData from 'highcharts/modules/no-data-to-display';
 noData(Highcharts);
-import { of } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
 import { MultiLinesChartService } from '../../services/multi-lines-chart.service';
-import { ApiChartDataService, IChartDataResponse } from '../../../services/api-chart-data.service';
+import { IChartDataResponse } from '../../../services/api-chart-data.service';
 import { AxisConfiguration } from '../../../../models/axis-configuration.model';
 
 @Component({
@@ -31,7 +29,6 @@ export class MultiLinesChartComponent implements OnInit {
 
   constructor(
     private multiLinesChartService: MultiLinesChartService,
-    private apiChartDataService: ApiChartDataService
   ) {
     Highcharts.setOptions({
       lang: {
