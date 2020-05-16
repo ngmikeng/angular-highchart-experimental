@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild, SimpleChange, Input } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, SimpleChange, Input, Output, EventEmitter } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import HC_stock from 'highcharts/modules/stock';
 import { MultiLinesNavigatorChartService } from '../../services/multi-lines-navigator-chart.service';
@@ -20,6 +20,8 @@ export class MultiLinesNavigatorChartComponent implements OnInit {
     yAxisConfig: AxisConfiguration[],
     chartOriginData: IChartDataResponse
   };
+
+  @Output() onSelectionX: EventEmitter<any> = new EventEmitter();
 
   constructor(
     private multiLinesNavigatorChartService: MultiLinesNavigatorChartService
@@ -53,7 +55,25 @@ export class MultiLinesNavigatorChartComponent implements OnInit {
   }
 
   initChart(yAxisData = []) {
+    const self = this;
     const chartOptions = this.multiLinesNavigatorChartService.getChartOptions();
+    chartOptions.chart.events = {
+      selection: function(event) {
+        const result = {minX: null, maxX: null, isReset: false};
+        if (event.xAxis) {
+          result.minX = event.xAxis[0].min;
+          result.maxX = event.xAxis[0].max;
+        } else {
+          const xAxisData = this.xAxis[0].getExtremes();
+          result.minX = xAxisData.dataMin;
+          result.maxX = xAxisData.dataMax;
+          result.isReset = true;
+        }
+        self.onSelectionX.emit(result);
+
+        return true;
+      }
+    };
     const xAxisOptions = this.multiLinesNavigatorChartService.getXAxisOption([
       { min: null, max: null }
     ]);
@@ -68,9 +88,21 @@ export class MultiLinesNavigatorChartComponent implements OnInit {
       seriesData = seriesData.concat(data);
     });
     chartOptions.series = seriesData;
+    chartOptions.navigator.series = seriesData.map(item => {
+      return {
+        type: 'line',
+        data: item.data
+      };
+    });
 
     if (this.chartContainerEle && this.chartContainerEle.nativeElement) {
       this.highcharts = Highcharts.stockChart(this.chartContainerEle.nativeElement, chartOptions);
+    }
+  }
+
+  resetZoom() {
+    if (this.highcharts) {
+      this.highcharts.zoomOut();
     }
   }
 

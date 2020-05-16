@@ -15,8 +15,11 @@ router.get('/mock-time-series', function (req, res) {
   const numberOfMapping = 5;
   let mockSerriesData = [];
   const dataMapping = ['dt'];
+  const from = req.query.from;
+  const util = req.query.util;
+  const interval = req.query.interval * 1;
   for (let index = 0; index < numberOfMapping; index++) {
-    const mockData = mockTimeSeries.sampleData({ methodType: 'gaussian' });
+    const mockData = mockTimeSeries.sampleData({ methodType: 'gaussian', from, util, interval });
     mockSerriesData.push(mockData);
     // add mapping
     dataMapping.push(`m${index}`);

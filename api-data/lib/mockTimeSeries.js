@@ -8,6 +8,12 @@ class MockTimeSeries {
     options = options ? options : {};
     const opts = {};
     opts.interval = options.interval || 60;
+    if (options.from) {
+      opts.from = options.from;
+    }
+    if (options.until) {
+      opts.until = options.until;
+    }
 
     const series = new Series(opts);
     let result = series.sin();

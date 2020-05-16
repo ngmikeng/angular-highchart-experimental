@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AxisConfiguration } from '../../models/axis-configuration.model';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MultiLinesChartService } from '../../shared/charts/services/multi-lines-chart.service';
 import { AxisConfigurationService } from '../../shared/services/axis-configuration.service';
 import { MultiLinesChartSettingsComponent } from '../../shared/components/modals';
-import { ApiChartDataService, IChartDataResponse } from '../../shared/services/api-chart-data.service';
+import { ApiChartDataService, IChartDataResponse, IChartDataRequestParam } from '../../shared/services/api-chart-data.service';
+import { MultiLinesNavigatorChartComponent } from '../../shared/charts/components/multi-lines-navigator-chart/multi-lines-navigator-chart.component';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-chart-multi-lines-navigator',
@@ -12,12 +14,15 @@ import { ApiChartDataService, IChartDataResponse } from '../../shared/services/a
   styleUrls: ['./chart-multi-lines-navigator.component.scss']
 })
 export class ChartMultiLinesNavigatorComponent implements OnInit {
+  @ViewChild(MultiLinesNavigatorChartComponent, null) highchart: MultiLinesNavigatorChartComponent;
 
   yAxisConfigs: AxisConfiguration[] = [];
   chartInputStates: {
     yAxisConfig: AxisConfiguration[],
     chartOriginData: IChartDataResponse
   };
+  lastDaysOptions: number[] = [1, 2, 3];
+  lastDay: FormControl = new FormControl(1);
 
   constructor(
     private modalService: NgbModal,
@@ -30,9 +35,16 @@ export class ChartMultiLinesNavigatorComponent implements OnInit {
     this.multiLinesChartService.getChartOptions();
     this.yAxisConfigs = this.axisConfigurationService.getDefaultConfigs();
 
-    this.apiChartDataService.getMultiLineChartData().subscribe(chartOriginData => {
+    this.loadDataByDays(this.lastDay.value).subscribe(chartOriginData => {
       this.setChartInputStates(this.yAxisConfigs, chartOriginData);
     });
+
+    // reload data by last days
+    this.lastDay.valueChanges.subscribe(val => {
+      this.loadDataByDays(val).subscribe(chartOriginData => {
+        this.setChartInputStates(this.yAxisConfigs, chartOriginData);
+      });
+    })
   }
 
   openChartSettings() {
@@ -55,6 +67,32 @@ export class ChartMultiLinesNavigatorComponent implements OnInit {
       yAxisConfig: axisConfigs ? [...axisConfigs] : this.chartInputStates.yAxisConfig,
       chartOriginData: chartData ? {...chartData} : this.chartInputStates.chartOriginData
     };
+  }
+
+  resetChart() {
+    if (this.highchart) {
+      this.highchart.resetZoom();
+    }
+  }
+
+  loadDataByDays(lastDay: number) {
+    const endTime = new Date().getTime();
+    const startTime = endTime - lastDay * 86400 * 1000;
+    const options: IChartDataRequestParam = {
+      from: new Date(startTime).toISOString(),
+      until: new Date(endTime).toISOString(),
+      interval: 60
+    };
+    return this.apiChartDataService.getMultiLineChartData(options);
+  }
+
+  onSelectionX(eventData) {
+    const options: IChartDataRequestParam = {
+      from: new Date(eventData.minX).toISOString(),
+      until: new Date(eventData.maxX).toISOString(),
+      interval: 10
+    };
+    this.apiChartDataService.getMultiLineChartData(options).subscribe();
   }
 
 }

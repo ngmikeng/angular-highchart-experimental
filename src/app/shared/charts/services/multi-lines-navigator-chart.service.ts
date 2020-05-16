@@ -11,8 +11,8 @@ export class MultiLinesNavigatorChartService {
   ) { }
 
   getChartOptions() {
-    let options = this.multiLinesChartService.getChartOptions();
-    // options.chart.zoomType = 'x';
+    let options: any = this.multiLinesChartService.getChartOptions();
+    options.chart.zoomType = 'x';
     options = Object.assign(options, {
       navigator: {
         adaptToUpdatedData: false,
@@ -20,7 +20,7 @@ export class MultiLinesNavigatorChartService {
         handles: {
           enabled: true
         },
-        // series: navigatorSeriesData,
+        series: [],
         margin: 5,
         xAxis: {
           labels: {
@@ -74,9 +74,6 @@ export class MultiLinesNavigatorChartService {
 
   parseSeriesData(axisDataSets: IAxisDataSet[], yAxisIndex: number, originData?: IChartDataResponse) {
     let result = this.multiLinesChartService.parseSeriesData(axisDataSets, yAxisIndex, originData);
-    result.forEach(item => {
-      item.showInNavigator = true;
-    });
 
     return result;
   }

@@ -4,6 +4,26 @@
     <button type="button" class="btn btn-sm btn-outline-secondary" (click)="openChartSettings()">Settings</button>
   </div>
   <div>
-    <app-multi-lines-navigator-chart [inputStates]="chartInputStates"></app-multi-lines-navigator-chart>
+    <div class="text-right">
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group row">
+            <label class="col-md-3 col-form-label">Last Days</label>
+            <div class="col-md-4">
+              <select class="form-control" [formControl]="lastDay">
+                <option *ngFor="let item of lastDaysOptions" [value]="item">{{item}}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <button type="button" class="btn btn-sm btn-outline-secondary" (click)="resetChart()">Reset</button>
+        </div>
+      </div>
+    </div>
+    <app-multi-lines-navigator-chart
+      [inputStates]="chartInputStates"
+      (onSelectionX)="onSelectionX($event)">
+    </app-multi-lines-navigator-chart>
   </div>
 </section>
