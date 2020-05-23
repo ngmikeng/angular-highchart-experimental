@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MultiLinesChartService } from './multi-lines-chart.service';
-import { IAxisDataSet } from '../../../models/axis-configuration.model';
+import { IAxisDataSet, IAxisConfiguration } from '../../../models/axis-configuration.model';
 import { IChartDataResponse } from '../../services/api-chart-data.service';
 
 @Injectable()
@@ -72,9 +72,19 @@ export class MultiLinesNavigatorChartService {
     return result;
   }
 
-  parseSeriesData(axisDataSets: IAxisDataSet[], yAxisIndex: number, originData?: IChartDataResponse) {
+  parseSeriesDataByDataSet(axisDataSets: IAxisDataSet[], yAxisIndex: number, originData?: IChartDataResponse) {
     let result = this.multiLinesChartService.parseSeriesData(axisDataSets, yAxisIndex, originData);
 
     return result;
+  }
+
+  parseSeriesDataByAxisConfig(yAxisData: IAxisConfiguration[], originData?: IChartDataResponse) {
+    let seriesData = [];
+    yAxisData.forEach((axisItem, axisIndex) => {
+      const data = this.parseSeriesDataByDataSet(axisItem.dataSets, axisIndex, originData);
+      seriesData = seriesData.concat(data);
+    });
+
+    return seriesData;
   }
 }

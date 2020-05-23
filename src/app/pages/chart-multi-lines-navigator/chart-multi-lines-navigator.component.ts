@@ -7,6 +7,7 @@ import { MultiLinesChartSettingsComponent } from '../../shared/components/modals
 import { ApiChartDataService, IChartDataResponse, IChartDataRequestParam } from '../../shared/services/api-chart-data.service';
 import { MultiLinesNavigatorChartComponent } from '../../shared/charts/components/multi-lines-navigator-chart/multi-lines-navigator-chart.component';
 import { FormControl } from '@angular/forms';
+import { MultiLinesNavigatorChartService } from '../../shared/charts/services/multi-lines-navigator-chart.service';
 
 @Component({
   selector: 'app-chart-multi-lines-navigator',
@@ -28,7 +29,8 @@ export class ChartMultiLinesNavigatorComponent implements OnInit {
     private modalService: NgbModal,
     private multiLinesChartService: MultiLinesChartService,
     private axisConfigurationService: AxisConfigurationService,
-    private apiChartDataService: ApiChartDataService
+    private apiChartDataService: ApiChartDataService,
+    private multiLinesNavigatorChartService: MultiLinesNavigatorChartService
   ) { }
 
   ngOnInit() {
@@ -87,12 +89,31 @@ export class ChartMultiLinesNavigatorComponent implements OnInit {
   }
 
   onSelectionX(eventData) {
-    const options: IChartDataRequestParam = {
-      from: new Date(eventData.minX).toISOString(),
-      until: new Date(eventData.maxX).toISOString(),
-      interval: 10
-    };
-    this.apiChartDataService.getMultiLineChartData(options).subscribe();
+    if (eventData && !eventData.isReset) {
+      let interval = 10;
+      const isLessAnHour = (eventData.maxX - eventData.minX) < (60 * 60 * 1000);
+      if (isLessAnHour) {
+        interval = 1;
+      }
+      const options: IChartDataRequestParam = {
+        from: new Date(eventData.minX).toISOString(),
+        until: new Date(eventData.maxX).toISOString(),
+        interval: interval
+      };
+      this.apiChartDataService.getMultiLineChartData(options).subscribe((chartZoomData) => {
+        const parsedSeriesData = this.multiLinesNavigatorChartService.parseSeriesDataByAxisConfig(
+          this.chartInputStates.yAxisConfig,
+          chartZoomData
+        );
+        this.highchart.setChartSeriesData(parsedSeriesData, true);
+      });
+    } else {
+      const parsedSeriesData = this.multiLinesNavigatorChartService.parseSeriesDataByAxisConfig(
+        this.chartInputStates.yAxisConfig,
+        this.chartInputStates.chartOriginData
+      );
+      this.highchart.setChartSeriesData(parsedSeriesData, true);
+    }
   }
 
 }

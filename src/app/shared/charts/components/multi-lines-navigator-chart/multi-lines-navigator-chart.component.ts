@@ -78,16 +78,12 @@ export class MultiLinesNavigatorChartComponent implements OnInit {
       { min: null, max: null }
     ]);
     const yAxisOptions = this.multiLinesNavigatorChartService.getYAxisOption(yAxisData);
-
     chartOptions.xAxis = xAxisOptions;
     chartOptions.yAxis = yAxisOptions;
-
-    let seriesData = [];
-    yAxisData.forEach((axisItem, axisIndex) => {
-      const data = this.multiLinesNavigatorChartService.parseSeriesData(axisItem.dataSets, axisIndex, this._chartOriginData);
-      seriesData = seriesData.concat(data);
-    });
+    // set main chart series data
+    let seriesData = this.multiLinesNavigatorChartService.parseSeriesDataByAxisConfig(yAxisData, this._chartOriginData);
     chartOptions.series = seriesData;
+    // set navigator chart series data
     chartOptions.navigator.series = seriesData.map(item => {
       return {
         type: 'line',
@@ -103,6 +99,37 @@ export class MultiLinesNavigatorChartComponent implements OnInit {
   resetZoom() {
     if (this.highcharts) {
       this.highcharts.zoomOut();
+    }
+  }
+
+  setChartSeriesData(parsedSeriesData, isRedraw?: boolean) {
+    if (parsedSeriesData && parsedSeriesData.length > 0) {
+      if (this.highcharts.series) {
+        this.highcharts.series.forEach(series => {
+          const seriesItem = parsedSeriesData.find(item => {
+            return item.id === series.options.id;
+          });
+          if (seriesItem) {
+            series.setData(seriesItem.data, false);
+          }
+        });
+      }
+      if (isRedraw) {
+        this.highcharts.redraw();
+      }
+    }
+  }
+
+  addChartSeries(parsedSeriesData, isRedraw?: boolean) {
+    if (parsedSeriesData && parsedSeriesData.length > 0) {
+      if (this.highcharts.series) {
+        parsedSeriesData.forEach(series => {
+          this.highcharts.addSeries(series, false, false);
+        });
+      }
+      if (isRedraw) {
+        this.highcharts.redraw();
+      }
     }
   }
 
