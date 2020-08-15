@@ -15,14 +15,9 @@
       </a>
     </h6>
     <ul class="nav flex-column mb-2">
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/pages/chart-multi-lines" routerLinkActive="active">
-          Multi-lines
-        </a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" routerLink="/pages/chart-multi-lines-navigator" routerLinkActive="active">
-          Multi-lines navigator
+      <li class="nav-item" *ngFor="let item of menuLinks">
+        <a class="nav-link" [routerLink]="item.path" routerLinkActive="active">
+          {{ item.label }}
         </a>
       </li>
     </ul>

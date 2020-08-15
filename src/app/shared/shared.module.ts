@@ -20,7 +20,7 @@ const COMPONENTS = [
   HeaderComponent,
   SidebarComponent,
   MultiLinesChartSettingsComponent,
-  AxisConfigurationComponent
+  AxisConfigurationComponent,
 ];
 const ENTRY_COMPONENTS = [
   MultiLinesChartSettingsComponent

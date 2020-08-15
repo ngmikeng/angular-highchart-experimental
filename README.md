@@ -1,5 +1,7 @@
 # AngularHighchartExperimental
 
+[Demo](https://ngmikeng.github.io/angular-highchart-experimental/)
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.1.2.
 
 ## Quick start

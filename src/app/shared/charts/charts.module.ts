@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders } from '@angular/core';
+import { NgModule, ModuleWithProviders, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { DefaultChartService } from './services/default-chart.service';
 import { MultiLinesChartService } from './services/multi-lines-chart.service';

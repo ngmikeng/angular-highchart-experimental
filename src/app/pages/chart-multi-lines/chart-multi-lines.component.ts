@@ -9,7 +9,7 @@ import { AxisConfiguration } from '../../models/axis-configuration.model';
 @Component({
 	selector: 'app-chart-multi-lines',
 	templateUrl: './chart-multi-lines.component.html',
-	styleUrls: ['./chart-multi-lines.component.scss']
+	styleUrls: ['./chart-multi-lines.component.scss'],
 })
 export class ChartMultiLinesComponent implements OnInit {
   yAxisConfigs: AxisConfiguration[] = [];
