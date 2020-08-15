@@ -24,7 +24,7 @@ const routes: Routes = [
       },
       {
         path: '',
-        redirectTo: 'dashboard',
+        redirectTo: 'chart-multi-lines',
         pathMatch: 'full',
       },
     ]

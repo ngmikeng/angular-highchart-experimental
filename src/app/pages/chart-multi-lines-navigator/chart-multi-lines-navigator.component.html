@@ -23,7 +23,8 @@
     </div>
     <app-multi-lines-navigator-chart
       [inputStates]="chartInputStates"
-      (onSelectionX)="onSelectionX($event)">
+      (onSelectionX)="onSelectionX($event)"
+      (onChangeNavigatorRange)="onChangeNavigatorRange($event)">
     </app-multi-lines-navigator-chart>
   </div>
 </section>

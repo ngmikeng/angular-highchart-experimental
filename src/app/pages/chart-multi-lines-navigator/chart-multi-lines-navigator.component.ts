@@ -5,7 +5,7 @@ import { MultiLinesChartService } from '../../shared/charts/services/multi-lines
 import { AxisConfigurationService } from '../../shared/services/axis-configuration.service';
 import { MultiLinesChartSettingsComponent } from '../../shared/components/modals';
 import { ApiChartDataService, IChartDataResponse, IChartDataRequestParam } from '../../shared/services/api-chart-data.service';
-import { MultiLinesNavigatorChartComponent } from '../../shared/charts/components/multi-lines-navigator-chart/multi-lines-navigator-chart.component';
+import { MultiLinesNavigatorChartComponent, IEventChangeRangePayload } from '../../shared/charts/components/multi-lines-navigator-chart/multi-lines-navigator-chart.component';
 import { FormControl } from '@angular/forms';
 import { MultiLinesNavigatorChartService } from '../../shared/charts/services/multi-lines-navigator-chart.service';
 
@@ -88,25 +88,29 @@ export class ChartMultiLinesNavigatorComponent implements OnInit {
     return this.apiChartDataService.getMultiLineChartData(options);
   }
 
-  onSelectionX(eventData) {
+  handleLoadDataByRange({ min, max}) {
+    let interval = 10;
+    const isLessAnHour = (max - min) < (60 * 60 * 1000);
+    if (isLessAnHour) {
+      interval = 1;
+    }
+    const options: IChartDataRequestParam = {
+      from: new Date(min).toISOString(),
+      until: new Date(max).toISOString(),
+      interval: interval
+    };
+    this.apiChartDataService.getMultiLineChartData(options).subscribe((chartZoomData) => {
+      const parsedSeriesData = this.multiLinesNavigatorChartService.parseSeriesDataByAxisConfig(
+        this.chartInputStates.yAxisConfig,
+        chartZoomData
+      );
+      this.highchart.setChartSeriesData(parsedSeriesData, true);
+    });
+  }
+
+  onSelectionX(eventData: IEventChangeRangePayload) {
     if (eventData && !eventData.isReset) {
-      let interval = 10;
-      const isLessAnHour = (eventData.maxX - eventData.minX) < (60 * 60 * 1000);
-      if (isLessAnHour) {
-        interval = 1;
-      }
-      const options: IChartDataRequestParam = {
-        from: new Date(eventData.minX).toISOString(),
-        until: new Date(eventData.maxX).toISOString(),
-        interval: interval
-      };
-      this.apiChartDataService.getMultiLineChartData(options).subscribe((chartZoomData) => {
-        const parsedSeriesData = this.multiLinesNavigatorChartService.parseSeriesDataByAxisConfig(
-          this.chartInputStates.yAxisConfig,
-          chartZoomData
-        );
-        this.highchart.setChartSeriesData(parsedSeriesData, true);
-      });
+      this.handleLoadDataByRange({ min: eventData.min, max: eventData.max });
     } else {
       const parsedSeriesData = this.multiLinesNavigatorChartService.parseSeriesDataByAxisConfig(
         this.chartInputStates.yAxisConfig,
@@ -114,6 +118,11 @@ export class ChartMultiLinesNavigatorComponent implements OnInit {
       );
       this.highchart.setChartSeriesData(parsedSeriesData, true);
     }
+  }
+
+  onChangeNavigatorRange(eventData) {
+    console.log(eventData);
+    this.handleLoadDataByRange({ min: eventData.min, max: eventData.max });
   }
 
 }

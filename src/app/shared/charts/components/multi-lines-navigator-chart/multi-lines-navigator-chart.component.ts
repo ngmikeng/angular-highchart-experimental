@@ -6,6 +6,12 @@ import { AxisConfiguration } from '../../../../models/axis-configuration.model';
 import { IChartDataResponse } from '../../../services/api-chart-data.service';
 HC_stock(Highcharts);
 
+export interface IEventChangeRangePayload {
+  min: number;
+  max: number;
+  isReset?: boolean;
+}
+
 @Component({
   selector: 'app-multi-lines-navigator-chart',
   templateUrl: './multi-lines-navigator-chart.component.html',
@@ -21,7 +27,8 @@ export class MultiLinesNavigatorChartComponent implements OnInit {
     chartOriginData: IChartDataResponse
   };
 
-  @Output() onSelectionX: EventEmitter<any> = new EventEmitter();
+  @Output() onSelectionX: EventEmitter<IEventChangeRangePayload> = new EventEmitter();
+  @Output() onChangeNavigatorRange: EventEmitter<IEventChangeRangePayload> = new EventEmitter();
 
   constructor(
     private multiLinesNavigatorChartService: MultiLinesNavigatorChartService
@@ -59,14 +66,14 @@ export class MultiLinesNavigatorChartComponent implements OnInit {
     const chartOptions = this.multiLinesNavigatorChartService.getChartOptions();
     chartOptions.chart.events = {
       selection: function(event) {
-        const result = {minX: null, maxX: null, isReset: false};
+        const result = {min: null, max: null, isReset: false};
         if (event.xAxis) {
-          result.minX = event.xAxis[0].min;
-          result.maxX = event.xAxis[0].max;
+          result.min = event.xAxis[0].min;
+          result.max = event.xAxis[0].max;
         } else {
           const xAxisData = this.xAxis[0].getExtremes();
-          result.minX = xAxisData.dataMin;
-          result.maxX = xAxisData.dataMax;
+          result.min = xAxisData.dataMin;
+          result.max = xAxisData.dataMax;
           result.isReset = true;
         }
         self.onSelectionX.emit(result);
@@ -77,6 +84,13 @@ export class MultiLinesNavigatorChartComponent implements OnInit {
     const xAxisOptions = this.multiLinesNavigatorChartService.getXAxisOption([
       { min: null, max: null }
     ]);
+    xAxisOptions[0].events = {
+      setExtremes: function(e) {
+        if (e && e.trigger === 'navigator') {
+          self.onChangeNavigatorRange.emit(e);
+        }
+      }
+    }
     const yAxisOptions = this.multiLinesNavigatorChartService.getYAxisOption(yAxisData);
     chartOptions.xAxis = xAxisOptions;
     chartOptions.yAxis = yAxisOptions;
